@@ -34,12 +34,6 @@ void vtkF3DInteractorEventRecorder::SetInteractor(vtkRenderWindowInteractor* int
 }
 
 //------------------------------------------------------------------------------
-void vtkF3DInteractorEventRecorder::Clear()
-{
-  // Place holder
-}
-
-//------------------------------------------------------------------------------
 void vtkF3DInteractorEventRecorder::ProcessEvents(
   vtkObject* object, unsigned long event, void* clientData, void* callData)
 {
@@ -75,8 +69,8 @@ void vtkF3DInteractorEventRecorder::ProcessEvents(
           {
             mod |= ModifierKey::AltKey;
           }
-          self->WriteEvent(vtkCommand::GetStringFromEventId(event), rwi->GetEventPosition(), mod, 
-            rwi->GetKeyCode(), rwi->GetRepeatCount(), rwi->GetKeySym());
+          self->WriteEvent(vtkCommand::GetStringFromEventId(event), rwi->GetEventPosition(), mod,
+            rwi->GetKeyCode(), rwi->GetRepeatCount(), rwi->GetKeySym(), callData);
         }
     }
     self->OutputStream->flush();
