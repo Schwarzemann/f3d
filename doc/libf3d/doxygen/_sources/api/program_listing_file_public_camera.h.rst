@@ -60,6 +60,9 @@ Program Listing for File camera.h
      virtual camera& pitch(angle_deg_t angle) = 0;
    
    
+   virtual camera& rotateByMouse(double deltaX, double deltaY) = 0;
+   virtual camera& rotateAroundFocalPoint(double deltaX, double deltaY) = 0;
+   
      virtual camera& setCurrentAsDefault() = 0;
    
      virtual camera& resetToDefault() = 0;
