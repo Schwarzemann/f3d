@@ -57,9 +57,9 @@ Program Listing for File camera.h
      virtual camera& pan(double right, double up, double forward = 0) = 0;
      virtual camera& zoom(double factor) = 0;
      virtual camera& roll(angle_deg_t angle) = 0;
-     virtual camera& azimuth(angle_deg_t angle) = 0;
-     virtual camera& yaw(angle_deg_t angle) = 0;
-     virtual camera& elevation(angle_deg_t angle) = 0;
+     virtual camera& addAzimuth(angle_deg_t angle) = 0;
+     virtual camera& addYaw(angle_deg_t angle) = 0;
+     virtual camera& addElevation(angle_deg_t angle) = 0;
      virtual camera& pitch(angle_deg_t angle) = 0;
    
    
