@@ -203,6 +203,7 @@ void camera_impl::getState(camera_state_t& state)
   cam->GetViewUp(state.up.data());
   state.angle = cam->GetViewAngle();
 }
+
 //----------------------------------------------------------------------------
 camera& camera_impl::dolly(double val)
 {
@@ -212,6 +213,7 @@ camera& camera_impl::dolly(double val)
   this->Internals->VTKRenderer->ResetCameraClippingRange();
   return *this;
 }
+
 //----------------------------------------------------------------------------
 camera& camera_impl::pan(double right, double up, double forward)
 {
