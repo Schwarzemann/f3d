@@ -45,12 +45,12 @@ Files
 .. toctree::
    :maxdepth: 5
 
-   file_public_log.h.rst
+   file_public_loader.h.rst
 
 .. toctree::
    :maxdepth: 5
 
-   file_public_scene.h.rst
+   file_public_log.h.rst
 
 .. toctree::
    :maxdepth: 5

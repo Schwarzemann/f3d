@@ -17,7 +17,7 @@ eng.options.update({
   "render.grid.enable": True,
   })
 
-eng.scene.add("f3d/testing/data/dragon.vtu")
+eng.loader.load_geometry("f3d/testing/data/dragon.vtu")
 eng.interactor.start()
 ```
 
@@ -40,8 +40,8 @@ public class F3DExample {
 
     // Always use try-with-resources idiom to ensure the native engine is released
     try (Engine engine = new Engine(Window.Type.NATIVE)) {
-      Scene scene = engine.getScene();
-      scene.add("f3d/testing/data/dragon.vtu");
+      Loader loader = engine.getLoader();
+      loader.loadGeometry("f3d/testing/data/dragon.vtu");
 
       engine.getWindow().render();
     }

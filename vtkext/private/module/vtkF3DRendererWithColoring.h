@@ -12,7 +12,7 @@
 
 #include "vtkF3DRenderer.h"
 
-#include "vtkF3DMetaImporter.h"
+#include "vtkF3DGenericImporter.h"
 
 #include <vtkWeakPointer.h>
 
@@ -20,7 +20,6 @@ class vtkColorTransferFunction;
 class vtkDataArray;
 class vtkDataSetAttributes;
 class vtkScalarBarActor;
-class vtkSmartVolumeMapper;
 
 class vtkF3DRendererWithColoring : public vtkF3DRenderer
 {
@@ -31,64 +30,64 @@ public:
   /**
    * Initialize all actors and flags
    */
-  void Initialize() override;
+  void Initialize(const std::string& up) override;
 
   /**
-   * Set the roughness on all actors
+   * Set the roughness on all coloring actors
    */
-  void SetRoughness(const std::optional<double>& roughness);
+  void SetRoughness(double roughness);
 
   /**
-   * Set the surface color on all actors
+   * Set the surface color on all coloring actors
    */
-  void SetSurfaceColor(const std::optional<std::vector<double>>& color);
+  void SetSurfaceColor(double* color);
 
   /**
-   * Set the emmissive factors on all actors
+   * Set the emmissive factors on all coloring actors
    */
-  void SetEmissiveFactor(const std::optional<std::vector<double>>& factors);
+  void SetEmissiveFactor(double* factors);
 
   /**
-   * Set the opacity on all actors
+   * Set the opacity on all coloring actors
    */
-  void SetOpacity(const std::optional<double>& opacity);
+  void SetOpacity(double opacity);
 
   /**
-   * Set the metallic on all actors
+   * Set the metallic on all coloring actors
    */
-  void SetMetallic(const std::optional<double>& metallic);
+  void SetMetallic(double metallic);
 
   /**
-   * Set the normal scale on all actors
+   * Set the normal scale on all coloring actors
    */
-  void SetNormalScale(const std::optional<double>& normalScale);
+  void SetNormalScale(double normalScale);
 
   /**
-   * Set the material capture texture on all actors.
+   * Set the material capture texture on all coloring actors.
    * This texture includes baked lighting effect,
    * so all other material textures are ignored.
    */
-  void SetTextureMatCap(const std::optional<std::string>& tex);
+  void SetTextureMatCap(const std::string& tex);
 
   /**
-   * Set the base color texture on all actors
+   * Set the base color texture on all coloring actors
    */
-  void SetTextureBaseColor(const std::optional<std::string>& tex);
+  void SetTextureBaseColor(const std::string& tex);
 
   /**
-   * Set the material texture on all actors
+   * Set the metarial texture on all coloring actors
    */
-  void SetTextureMaterial(const std::optional<std::string>& tex);
+  void SetTextureMaterial(const std::string& tex);
 
   /**
-   * Set the emissive texture on all actors
+   * Set the emissive texture on all coloring actors
    */
-  void SetTextureEmissive(const std::optional<std::string>& tex);
+  void SetTextureEmissive(const std::string& tex);
 
   /**
-   * Set the normal texture on all actors
+   * Set the normal texture on all coloring actors
    */
-  void SetTextureNormal(const std::optional<std::string>& tex);
+  void SetTextureNormal(const std::string& tex);
 
   enum class SplatType
   {
@@ -103,8 +102,8 @@ public:
 
   /**
    * Set the visibility of the scalar bar.
-   * It will only be shown when coloring and not shown
-   * when using direct scalars rendering.
+   * It will only be shown when coloring and not
+   * using direct scalars rendering.
    */
   void ShowScalarBar(bool show);
 
@@ -153,9 +152,9 @@ public:
   void CycleScalars(CycleType type);
 
   /**
-   * Set the meta importer to recover coloring information from
+   * Set the generic importer to handle coloring and other actors related actions with.
    */
-  void SetImporter(vtkF3DMetaImporter* importer);
+  void SetImporter(vtkF3DGenericImporter* importer);
 
   /**
    * Set coloring information.
@@ -176,7 +175,8 @@ public:
   ///@}
 
   /**
-   * Set properties on each individual actors and also configure the coloring
+   * Reimplemented to update the visibility and coloring of internal actors
+   * as well as the scalar bar actors.
    * Call Superclass::UpdateActors at the end.
    */
   void UpdateActors() override;
@@ -191,29 +191,28 @@ protected:
   ~vtkF3DRendererWithColoring() override = default;
 
   /**
-   * XXX: This method name is semantically incorrect and will soon be changed
-   * Configure all coloring actors properties
+   * Configure all coloring actors properties:
+   *  - roughness
+   *
    */
   void ConfigureColoringActorsProperties();
 
   /**
-   * Configure coloring for all actors
+   * Configure coloring for all coloring actors
    */
   void ConfigureColoring();
 
   /**
    * Convenience method for configuring a poly data mapper for coloring
-   * Return true if mapper was configured for coloring, false otherwise.
    */
-  static bool ConfigureMapperForColoring(vtkPolyDataMapper* mapper, const std::string& name,
+  static void ConfigureMapperForColoring(vtkPolyDataMapper* mapper, vtkDataArray* array,
     int component, vtkColorTransferFunction* ctf, double range[2], bool cellFlag = false);
 
   /**
-   * Convenience method for configuring a volume mapper and volume prop for coloring
-   * Return true if they were configured for coloring, false otherwise.
+   * Convenience method for configuring a volume mapper and volume for coloring
    */
-  static bool ConfigureVolumeForColoring(vtkSmartVolumeMapper* mapper, vtkVolume* volume,
-    const std::string& name, int component, vtkColorTransferFunction* ctf, double range[2],
+  static void ConfigureVolumeForColoring(vtkSmartVolumeMapper* mapper, vtkVolume* volume,
+    vtkDataArray* array, int component, vtkColorTransferFunction* ctf, double range[2],
     bool cellFlag = false, bool inverseOpacityFlag = false);
 
   /**
@@ -226,7 +225,7 @@ protected:
    * Configure internal range and color transfer function according to provided
    * coloring info
    */
-  void ConfigureRangeAndCTFForColoring(const vtkF3DMetaImporter::ColoringInfo& info);
+  void ConfigureRangeAndCTFForColoring(const vtkF3DGenericImporter::ColoringInfo& info);
 
   /**
    * Fill cheatsheet hotkeys string stream
@@ -269,29 +268,28 @@ protected:
    */
   std::string ComponentToString(int component);
 
-  vtkF3DMetaImporter* Importer = nullptr;
-  vtkMTimeType ImporterTimeStamp = 0;
+  vtkWeakPointer<vtkF3DGenericImporter> Importer = nullptr;
 
   vtkNew<vtkScalarBarActor> ScalarBarActor;
   bool ScalarBarActorConfigured = false;
 
-  bool ColoringMappersConfigured = false;
+  bool GeometryMappersConfigured = false;
   bool PointSpritesMappersConfigured = false;
   bool VolumePropsAndMappersConfigured = false;
   bool ColoringActorsPropertiesConfigured = false;
   bool ColoringConfigured = false;
 
-  std::optional<double> Opacity;
-  std::optional<double> Roughness;
-  std::optional<double> Metallic;
-  std::optional<double> NormalScale;
-  std::optional<std::vector<double>> SurfaceColor;
-  std::optional<std::vector<double>> EmissiveFactor;
-  std::optional<std::string> TextureMatCap;
-  std::optional<std::string> TextureBaseColor;
-  std::optional<std::string> TextureMaterial;
-  std::optional<std::string> TextureEmissive;
-  std::optional<std::string> TextureNormal;
+  double Opacity = 1.;
+  double Roughness = 0.3;
+  double Metallic = 0.;
+  double NormalScale = 1.;
+  double SurfaceColor[3] = { 1., 1., 1. };
+  double EmissiveFactor[3] = { 1., 1., 1. };
+  std::string TextureMatCap;
+  std::string TextureBaseColor;
+  std::string TextureMaterial;
+  std::string TextureEmissive;
+  std::string TextureNormal;
 
   vtkSmartPointer<vtkColorTransferFunction> ColorTransferFunction;
   double ColorRange[2] = { 0.0, 1.0 };
@@ -308,6 +306,8 @@ protected:
 
   std::optional<std::vector<double>> UserScalarBarRange;
   std::vector<double> Colormap;
+
+  vtkMTimeType ImporterTimeStamp = 0;
 };
 
 #endif

@@ -82,12 +82,11 @@ public:
   void SetFinalShader(const std::optional<std::string>& finalShader);
   ///@}
 
+  ///@{
   /**
    * Set SetUseOrthographicProjection
    */
   void SetUseOrthographicProjection(bool use);
-
-  ///@{
   /**
    * Set/Get UseTrackball
    */
@@ -133,12 +132,7 @@ public:
    * Initialize the renderer actors and flags.
    * Should be called after being added to a vtkRenderWindow.
    */
-  virtual void Initialize();
-
-  /**
-   * Initialize actors properties related to the up vector using the provided upString, including the camera
-   */
-  void InitializeUpVector(const std::string& upString);
+  virtual void Initialize(const std::string& up);
 
   /**
    * Get the OpenGL skybox
@@ -250,6 +244,8 @@ protected:
    */
   static std::string ShortName(const std::string& name, int maxChar);
 
+  vtkNew<vtkCamera> InitialCamera;
+
   vtkSmartPointer<vtkOrientationMarkerWidget> AxisWidget;
 
   vtkNew<vtkCornerAnnotation> FilenameActor;
@@ -263,7 +259,6 @@ protected:
   vtkNew<vtkTextActor> TimerActor;
   unsigned int Timer = 0;
 
-  bool UpVectorConfigured = false;
   bool CheatSheetConfigured = false;
   bool ActorsPropertiesConfigured = false;
   bool GridConfigured = false;

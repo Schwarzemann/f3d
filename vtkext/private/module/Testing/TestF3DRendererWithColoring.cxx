@@ -1,6 +1,5 @@
 #include <vtkNew.h>
 #include <vtkTestUtilities.h>
-#include <vtkRenderWindow.h>
 #include <vtkXMLUnstructuredGridReader.h>
 
 #include "vtkF3DConfigure.h"
@@ -10,24 +9,31 @@
 int TestF3DRendererWithColoring(int argc, char* argv[])
 {
   vtkNew<vtkF3DRendererWithColoring> renderer;
-  vtkNew<vtkF3DMetaImporter> importer;
-  vtkNew<vtkRenderWindow> window;
 
-  window->AddRenderer(renderer);
-  importer->SetRenderWindow(window);
+  // Check some invalid code path
+  renderer->ShowGrid(true);
+
+  // Check error paths
+  if (renderer->GetColoringArrayName().has_value())
+  {
+    std::cerr << "Unexpected coloring information without an importer" << std::endl;
+    return EXIT_FAILURE;
+  }
+  if (!renderer->GetColoringDescription().empty())
+  {
+    std::cerr << "Unexpected coloring description without an importer" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  vtkNew<vtkF3DGenericImporter> importer;
   renderer->SetImporter(importer);
 
-  // Check invalid bounding box code path
-  renderer->ShowGrid(true);
-  renderer->UpdateActors();
-
+  // Read a vts and a vtu with same array names
+  // but different component names and array ranges
   vtkNew<vtkXMLUnstructuredGridReader> readerVTU;
   std::string filename = std::string(argv[1]) + "data/bluntfin_t.vtu";
   readerVTU->SetFileName(filename.c_str());
-  vtkNew<vtkF3DGenericImporter> importerVTU;
-  importerVTU->SetInternalReader(readerVTU);
-
-  importer->AddImporter(importerVTU);
+  importer->AddInternalReader("VTU", readerVTU);
   importer->Update();
 
   // Check invalid array code path
