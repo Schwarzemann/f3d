@@ -19,8 +19,8 @@ Options|Default|Description
 \-\-no-render||Do not render anything and quit just after loading the first file, use with \-\-verbose to recover information about a file.
 \-\-max-size=\<size in MiB\>|-1|Prevent F3D to load a file bigger than the provided size in Mib, negative value means unlimited, useful for thumbnails.
 \-\-watch||Watch current file and automatically reload it whenever it is modified on disk.
-\-\-load-plugins=\<paths or names\>||List of plugins to load separated with a comma. Official plugins are `alembic`, `assimp`, `draco`, `exodus`, `occt`, `usd`, `vdb`. See [usage](USAGE.md) for more info.
-\-\-scan-plugins||Scan standard directories for plugins and display their names, results may be incomplete. See [usage](USAGE.md) for more info.
+\-\-load-plugins=\<paths or names\>||List of plugins to load separated with a comma. Official plugins are `alembic`, `assimp`, `draco`, `exodus`, `occt`, `usd`, `vdb`. See [plugins](PLUGINS.md) for more info.
+\-\-scan-plugins||Scan standard directories for plugins and display their names, results may be incomplete. See [plugins](PLUGINS.md) for more info.
 \-\-screenshot-filename=\<png file\>|`{app}/{model}_{n}.png`|Filename to save [screenshots](INTERACTIONS.md#taking-screenshots) to. Can use [template variables](#filename-templating).
 
 ## General Options
@@ -96,7 +96,7 @@ Options|Default|Description
 -b, \-\-bar||Show *scalar bar* of the coloring by array.<br>Use with the scalar option.
 \-\-colormap\-file=\<name\>||Set a *colormap file for the coloring*.<br>See [color maps](COLOR_MAPS.md).<br>Use with the scalar option.
 \-\-colormap=\<color_list\>||Set a *custom colormap for the coloring*.<br>This is a list of colors in the format `val1,red1,green1,blue1,...,valN,redN,greenN,blueN`<br>where all values are in the range (0,1).<br>Ignored if `--colormap-file` option is specified.<br>Use with the scalar option.
--v, \-\-volume||Enable *volume rendering*. It is only available for 3D image data (vti, dcm, nrrd, mhd files) and will display nothing with other formats.
+-v, \-\-volume||Enable *volume rendering*. It is only available for 3D image data (vti, dcm, nrrd, mhd files) and will display nothing with other formats. It forces coloring.
 -i, \-\-inverse||Inverse the linear opacity function used for volume rendering.
 
 ## Camera configuration options

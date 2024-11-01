@@ -50,18 +50,13 @@ Program Listing for File camera.h
      virtual void getState(camera_state_t& state) = 0;
    
    
-     virtual angle_deg_t getAzimuth() = 0;
-     virtual angle_deg_t getYaw() = 0;
-     virtual angle_deg_t getElevation() = 0;
-   
-   
      virtual camera& dolly(double val) = 0;
      virtual camera& pan(double right, double up, double forward = 0) = 0;
      virtual camera& zoom(double factor) = 0;
      virtual camera& roll(angle_deg_t angle) = 0;
-     virtual camera& addAzimuth(angle_deg_t angle) = 0;
-     virtual camera& addYaw(angle_deg_t angle) = 0;
-     virtual camera& addElevation(angle_deg_t angle) = 0;
+     virtual camera& azimuth(angle_deg_t angle) = 0;
+     virtual camera& yaw(angle_deg_t angle) = 0;
+     virtual camera& elevation(angle_deg_t angle) = 0;
      virtual camera& pitch(angle_deg_t angle) = 0;
    
    

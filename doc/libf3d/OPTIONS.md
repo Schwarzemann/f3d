@@ -62,7 +62,7 @@ model.scivis.range|vector\<double\><br>optional<br>render|Set the *coloring rang
 model.point_sprites.enable|bool<br>false<br>render|Show sphere *points sprites* instead of the geometry.|\-\-point-sprites
 model.point_sprites.type|string<br>sphere<br>render|Set the sprites type when showing point sprites (can be `sphere` or `gaussian`).|\-\-point-stripes-type
 model.point_sprites.size|double<br>10.0<br>render|Set the *size* of point sprites.|\-\-point-stripes-size
-model.volume.enable|bool<br>false<br>render|Enable *volume rendering*. It is only available for 3D image data (vti, dcm, nrrd, mhd files) and will display nothing with other formats.|\-\-volume
+model.volume.enable|bool<br>false<br>render|Enable *volume rendering*. It is only available for 3D image data (vti, dcm, nrrd, mhd files) and will display nothing with other formats. It forces coloring.|\-\-volume
 model.volume.inverse|bool<br>false<br>render|Inverse the linear opacity function.|\-\-inverse
 
 ## Render Options
@@ -119,7 +119,7 @@ There are three APIs to access the options
 The most straightforward and easy to use API, just access it through the structs available in the options instance, eg:
 
 ```cpp
-  f3d::engine eng(f3d::window::Type::NATIVE);
+  f3d::engine eng = f3d::engine::create();
   f3d::options& opt = eng.getOptions();
   opt.render.show_edges = true;
   opt.render.grid.enable = true;
@@ -130,7 +130,7 @@ The most straightforward and easy to use API, just access it through the structs
 Please note that when accessing optional options, special care must be used, eg:
 
 ```cpp
-  f3d::engine eng(f3d::window::Type::NATIVE);
+  f3d::engine eng = f3d::engine::create();
   f3d::options& opt = eng.getOptions();
   if (opt.render.line_width.has_value())
   {
@@ -147,7 +147,7 @@ The most generic and flexible API, as it rely on parsing and string generation.
 The documentation about option parsing is upcoming.
 
 ```cpp
-  f3d::engine eng(f3d::window::Type::NATIVE);
+  f3d::engine eng = f3d::engine::create();
   f3d::options& opt = eng.getOptions();
   opt.setAsString("render.show_edges", "true");
   opt.setAsString("render.grid.enable", "true");
@@ -158,7 +158,7 @@ The documentation about option parsing is upcoming.
 When using this API make sure to catch exceptions has needed, eg:
 
 ```cpp
-  f3d::engine eng(f3d::window::Type::NATIVE);
+  f3d::engine eng = f3d::engine::create();
   f3d::options& opt = eng.getOptions();
 
   try
@@ -180,7 +180,7 @@ When using this API make sure to catch exceptions has needed, eg:
 An API that is similar to the F3D 2.0 options API thanks to std::variant.
 
 ```cpp
-  f3d::engine eng(f3d::window::Type::NATIVE);
+  f3d::engine eng = f3d::engine::create();
   f3d::options& opt = eng.getOptions();
   opt.set("render.show_edges", true);
   opt.set("render.grid.enable", true);
